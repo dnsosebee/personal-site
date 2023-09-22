@@ -1,5 +1,5 @@
-import { SitePage } from "./_components/sitePage";
+import { SiteRouter } from "./_components/sitePage";
 
-export default function Home() {
-  return <SitePage />;
+export default function Page() {
+  return <SiteRouter params={{ slug: [] }} />;
 }

@@ -18,13 +18,13 @@ export const DarkModeToggle = () => {
   // }
 
   return (
-    <>
+    <div className="h-8 w-8">
       <DarkModeSwitch
         style={{ marginBottom: "2rem" }}
         checked={theme === "dark"}
         onChange={() => setTheme(theme === "dark" ? "light" : "dark")}
         size={30}
       />
-    </>
+    </div>
   );
 };

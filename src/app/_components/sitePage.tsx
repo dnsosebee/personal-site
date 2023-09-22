@@ -1,12 +1,17 @@
-"use client";
-
-import Content from "../../content/content";
+import { routes } from "@/lib/gen/routes";
+import { arrayEquals } from "@/lib/helpers";
+import { notFound } from "next/navigation";
 import { Article } from "./article";
 
-export const SitePage = () => {
+export const SiteRouter = ({ params }: { params: { slug: string[] } }) => {
+  const route = routes.find((route) => arrayEquals(route.slug, params.slug));
+  if (!route) {
+    return notFound();
+  }
+
   return (
     <Article>
-      <Content.default />
+      <h1>Page: {JSON.stringify(route)}</h1>
     </Article>
   );
 };

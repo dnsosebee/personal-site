@@ -4,10 +4,10 @@ import { notFound } from "next/navigation";
 import { SitePage } from "./sitePage";
 
 export const SiteRouter = ({ params }: { params: { slug: string[] } }) => {
-  const route = routes.find((route) => arrayEquals(route.slug, params.slug));
-  if (!route) {
+  const selectedRoute = routes.find((route) => arrayEquals(route.slug, params.slug));
+  if (!selectedRoute) {
     return notFound();
   }
 
-  return <SitePage route={route} />;
+  return <SitePage selectedRoute={selectedRoute} />;
 };

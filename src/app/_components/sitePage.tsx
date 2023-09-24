@@ -1,15 +1,11 @@
 import { Route } from "@/lib/route-gen";
-import dynamic from "next/dynamic";
-import { Article } from "./article";
+import { Flowchart } from "./flowchart";
+import { InitializeStore } from "./store";
 
-export const SitePage = ({ route }: { route: Route }) => {
-  const pathnameWithoutTrailingSlash = route.pathname.replace(/\/$/, "");
-  const Component = dynamic(() => import(`src/content${pathnameWithoutTrailingSlash}/page.mdx`));
-
+export const SitePage = ({ selectedRoute }: { selectedRoute: Route }) => {
   return (
-    <Article>
-      <h1>{route.metadata.title}</h1>
-      <Component />
-    </Article>
+    <InitializeStore selectedRoute={selectedRoute}>
+      <Flowchart />
+    </InitializeStore>
   );
 };

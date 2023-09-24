@@ -1,30 +1,34 @@
 "use client";
+import { Route } from "@/lib/route-gen";
 import { create } from "zustand";
 
-type Path = string[];
-
-type User = {
-  selectedItem: Path;
-  hoveredItem: Path;
-  mouse: {
-    x: number;
-    y: number;
-  };
+type UserFocus = {
+  selectedRoute: Route | null;
+  hoveredRoute: Route | null;
 };
 
 type Store = {
-  user: User;
-  setUser: (user: User) => void;
+  user: UserFocus;
+  setSelectedRoute: (route: Route) => void;
+  setHoveredRoute: (route: Route) => void;
 };
 
-export const useStore = create<Store>((set) => ({
+export const useSiteStore = create<Store>((set) => ({
   user: {
-    selectedItem: [],
-    hoveredItem: [],
-    mouse: {
-      x: 0,
-      y: 0,
-    },
+    selectedRoute: null,
+    hoveredRoute: null,
   },
-  setUser: (user) => set(() => ({ user })),
+  setSelectedRoute: (route) => set((state) => ({ user: { ...state.user, selectedRoute: route } })),
+  setHoveredRoute: (route) => set((state) => ({ user: { ...state.user, hoveredRoute: route } })),
 }));
+
+export const InitializeStore = ({
+  selectedRoute,
+  children,
+}: {
+  selectedRoute: Route;
+  children: React.ReactNode;
+}) => {
+  useSiteStore.setState((state) => ({ user: { ...state.user, selectedRoute } }));
+  return <>{children}</>;
+};

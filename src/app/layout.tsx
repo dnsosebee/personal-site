@@ -18,7 +18,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body className={`${inter.className} bg-white dark:bg-black flex flex-col h-screen w-screen`}>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           <Header />
-          <main>{children}</main>
+          <main className="grow flex flex-col">{children}</main>
         </ThemeProvider>
       </body>
     </html>

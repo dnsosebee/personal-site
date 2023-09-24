@@ -3,7 +3,7 @@ import fs from "fs";
 import matter from "gray-matter";
 import path from "path";
 
-type Route = {
+export type Route = {
   pathname: string;
   slug: string[]; // same as above
   metadata: any;

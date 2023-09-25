@@ -1,5 +1,6 @@
 "use client";
 import ReactFlow, { Background, BackgroundVariant, Controls } from "reactflow";
+import "reactflow/dist/style.css";
 
 export const Flowchart = () => {
   const initialNodes = [
@@ -10,7 +11,12 @@ export const Flowchart = () => {
 
   return (
     <div className="grow">
-      <ReactFlow nodes={initialNodes} edges={initialEdges}>
+      <ReactFlow
+        nodes={initialNodes}
+        edges={initialEdges}
+        panOnDrag={false}
+        // style={{ cursor: "pointer" }}
+      >
         <Controls />
         <Background variant={BackgroundVariant.Dots} gap={12} size={1} />
       </ReactFlow>

@@ -1,4 +1,4 @@
-import { Route } from "@/lib/route-gen";
+import { Route } from "@/model/schema/route";
 import dynamic from "next/dynamic";
 
 export const Article = ({ route }: { route: Route }) => {

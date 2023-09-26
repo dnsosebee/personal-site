@@ -1,53 +1,47 @@
+import type { Route } from "@/model/schema/route";
 import fs from "fs";
 
 import matter from "gray-matter";
 import path from "path";
 
-export type Route = {
-  pathname: string;
-  slug: string[]; // same as above
-  metadata: any;
-  links: string[][];
-};
+const PARENT_FOLDER = "src/content";
 
-async function getRoutes(dir: string, slug: string[] = []): Promise<Route[]> {
-  const files = fs.readdirSync(dir);
-  let routes: Route[] = [];
-
-  if (files.find((file) => file === "page.mdx")) {
-    const route = [...slug];
-    routes.push(await getRoute(route));
-  }
-
+async function getRoutes(dirslug: string[] = []): Promise<Route[]> {
+  const dir = path.join(PARENT_FOLDER, ...dirslug);
+  const files = await fs.promises.readdir(dir);
+  const routes: Route[] = [];
   for (const file of files) {
     const filePath = path.join(dir, file);
-    const stat = fs.statSync(filePath);
-    if (stat.isDirectory()) {
-      const nestedRoutes = await getRoutes(filePath, [...slug, file]);
-      routes = routes.concat(nestedRoutes);
+    const stats = await fs.promises.stat(filePath);
+    if (stats.isDirectory()) {
+      const children = await getRoutes([...dirslug, file]);
+      routes.push(...children);
+    } else if (stats.isFile() && file.endsWith(".mdx")) {
+      routes.push(await getRoute(dirslug, file));
     }
   }
 
   return routes;
 }
 
-async function getRoute(slug: string[]): Promise<Route> {
-  const filePath = `src/content/${slug.join("/")}/page.mdx`;
+async function getRoute(dirslug: string[], file: string): Promise<Route> {
+  const filepath = path.join(PARENT_FOLDER, ...dirslug, file);
+  const fileContent = fs.readFileSync(filepath, "utf8");
 
-  const file = fs.readFileSync(filePath, "utf-8");
-  // get the url for links that are relative
-
-  const relativeSlugs = file.match(/\]\((?!http)(.*?)\)/g)?.map((link) => {
+  const relativeSlugs = fileContent.match(/\]\((?!http)(.*?)\)/g)?.map((link) => {
     const url = link.replace(/\]\(/g, "").replace(/\)/g, "");
-    // convert to slug
     const slug = url.split("/").filter((s) => s !== "");
 
     return slug;
   });
-  const parsed = matter(file);
+  const parsed = matter(fileContent);
   const metadata = parsed.data;
 
+  const isIndex = file === "index.mdx";
+  const slug = [...dirslug, ...(isIndex ? [] : [file.replace(".mdx", "")])];
+
   return {
+    isIndex,
     pathname: `/${slug.join("/")}`,
     slug,
     metadata,
@@ -55,7 +49,7 @@ async function getRoute(slug: string[]): Promise<Route> {
   };
 }
 
-getRoutes("src/content").then((routes: Route[]) => {
+getRoutes([]).then((routes: Route[]) => {
   // save to src/content/routes.json
   fs.writeFileSync("src/lib/gen/routes.ts", `export const routes = ${JSON.stringify(routes)}`);
 });

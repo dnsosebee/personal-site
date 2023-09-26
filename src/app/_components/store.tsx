@@ -1,5 +1,5 @@
 "use client";
-import { Route } from "@/lib/route-gen";
+import { Route } from "@/model/schema/route";
 import { create } from "zustand";
 
 type UserFocus = {

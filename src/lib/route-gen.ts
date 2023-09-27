@@ -6,10 +6,25 @@ import path from "path";
 
 const PARENT_FOLDER = "src/content";
 
-async function getRoutes(dirslug: string[] = []): Promise<Route[]> {
+async function getRoutes(
+  dirslug: string[] = [],
+  cascadeType: string = "article"
+): Promise<Route[]> {
   const dir = path.join(PARENT_FOLDER, ...dirslug);
   const files = await fs.promises.readdir(dir);
   const routes: Route[] = [];
+
+  if (files.includes("index.mdx")) {
+    const { route: indexRoute, cascadeType: indexCascadeType } = await getRoute(
+      dirslug,
+      "index.mdx",
+      cascadeType
+    );
+    routes.push(indexRoute);
+    cascadeType = indexCascadeType;
+    files.splice(files.indexOf("index.mdx"), 1);
+  }
+
   for (const file of files) {
     const filePath = path.join(dir, file);
     const stats = await fs.promises.stat(filePath);
@@ -17,14 +32,18 @@ async function getRoutes(dirslug: string[] = []): Promise<Route[]> {
       const children = await getRoutes([...dirslug, file]);
       routes.push(...children);
     } else if (stats.isFile() && file.endsWith(".mdx")) {
-      routes.push(await getRoute(dirslug, file));
+      routes.push((await getRoute(dirslug, file, cascadeType)).route);
     }
   }
 
   return routes;
 }
 
-async function getRoute(dirslug: string[], file: string): Promise<Route> {
+async function getRoute(
+  dirslug: string[],
+  file: string,
+  cascadeType: string
+): Promise<{ route: Route; cascadeType: string }> {
   const filepath = path.join(PARENT_FOLDER, ...dirslug, file);
   const fileContent = fs.readFileSync(filepath, "utf8");
 
@@ -40,16 +59,21 @@ async function getRoute(dirslug: string[], file: string): Promise<Route> {
   const isIndex = file === "index.mdx";
   const slug = [...dirslug, ...(isIndex ? [] : [file.replace(".mdx", "")])];
 
+  metadata.type = metadata.type || cascadeType;
+
   return {
-    isIndex,
-    pathname: `/${slug.join("/")}`,
-    slug,
-    metadata,
-    links: relativeSlugs || [],
+    route: {
+      isIndex,
+      pathname: `/${slug.join("/")}`,
+      slug,
+      metadata,
+      links: relativeSlugs || [],
+    },
+    cascadeType: isIndex && metadata.cascadeType ? metadata.cascadeType : cascadeType,
   };
 }
 
-getRoutes([]).then((routes: Route[]) => {
+getRoutes().then((routes: Route[]) => {
   // save to src/content/routes.json
   fs.writeFileSync("src/lib/gen/routes.ts", `export const routes = ${JSON.stringify(routes)}`);
 });

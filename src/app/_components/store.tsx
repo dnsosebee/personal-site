@@ -11,6 +11,7 @@ type Store = {
   user: UserFocus;
   setSelectedRoute: (route: Route) => void;
   setHoveredRoute: (route: Route) => void;
+  unsetHoveredRoute: (route: Route) => void;
 };
 
 export const useSiteStore = create<Store>((set) => ({
@@ -18,8 +19,23 @@ export const useSiteStore = create<Store>((set) => ({
     selectedRoute: null,
     hoveredRoute: null,
   },
-  setSelectedRoute: (route) => set((state) => ({ user: { ...state.user, selectedRoute: route } })),
-  setHoveredRoute: (route) => set((state) => ({ user: { ...state.user, hoveredRoute: route } })),
+  setSelectedRoute: (route) =>
+    set((state) => {
+      window.history.pushState({}, "", route.pathname);
+      return { user: { ...state.user, selectedRoute: route } };
+    }),
+  setHoveredRoute: (route) =>
+    set((state) => {
+      return { user: { ...state.user, hoveredRoute: route } };
+    }),
+  unsetHoveredRoute: (route) =>
+    set((state) => ({
+      user: {
+        ...state.user,
+        hoveredRoute:
+          state.user.hoveredRoute?.pathname === route.pathname ? null : state.user.hoveredRoute,
+      },
+    })),
 }));
 
 export const InitializeStore = ({

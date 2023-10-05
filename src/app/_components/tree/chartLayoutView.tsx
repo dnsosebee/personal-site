@@ -3,10 +3,10 @@ import { chartLayout } from "@/content/layout";
 import { Column } from "@/model/schema/tree/nodes/column";
 import { ColumnView } from "./columnView";
 
-export const Chart = () => {
+export const ChartLayoutView = () => {
   return (
     <div
-      className="grow bg-green-100 p-2 space-x-2"
+      className="grow space-x-2"
       style={{
         display: "grid",
         gridTemplateColumns:

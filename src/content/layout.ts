@@ -43,3 +43,5 @@ export const chartLayout: ChartLayout = withWeight({
     }),
   ],
 });
+
+console.log({ chartLayout: JSON.stringify(chartLayout, null, 2) });

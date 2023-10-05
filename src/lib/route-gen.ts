@@ -73,7 +73,30 @@ async function getRoute(
   };
 }
 
+const getArticlesTs = (routes: Route[]) => {
+  return `
+  ${routes
+    .map(
+      (route, i) =>
+        `import R${i} from "@/content${route.pathname === "/" ? "" : route.pathname}${
+          route.isIndex ? "/index" : ""
+        }.mdx"`
+    )
+    .join("\n")}
+
+  export const articles: Record<string, any> = {
+    ${routes
+      .map(
+        (route) =>
+          `"${route.pathname}": R${routes.findIndex((r) => r.pathname === route.pathname)},`
+      )
+      .join("\n")}
+  }
+  `;
+};
+
 getRoutes().then((routes: Route[]) => {
   // save to src/content/routes.json
   fs.writeFileSync("src/lib/gen/routes.ts", `export const routes = ${JSON.stringify(routes)}`);
+  fs.writeFileSync("src/lib/gen/articles.ts", getArticlesTs(routes));
 });

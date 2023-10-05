@@ -15,10 +15,12 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
-      <body className={`${inter.className} bg-white dark:bg-black flex flex-col h-screen w-screen`}>
+      <body
+        className={`${inter.className} bg-stone-100 dark:bg-stone-900 text-stone-900 dark:text-stone-100 flex flex-col h-screen w-screen`}
+      >
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           <Header />
-          <main className="grow flex flex-col">{children}</main>
+          {children}
         </ThemeProvider>
       </body>
     </html>

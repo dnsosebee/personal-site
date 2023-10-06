@@ -19,24 +19,47 @@ export const useSiteStore = create<Store>((set) => ({
     selectedRoute: null,
     hoveredRoute: null,
   },
-  setSelectedRoute: (route) =>
+  setSelectedRoute: (route) => {
+    console.log("setSelectedRoute", route);
     set((state) => {
       window.history.pushState({}, "", route.pathname);
       return { user: { ...state.user, selectedRoute: route } };
-    }),
-  setHoveredRoute: (route) =>
-    set((state) => {
-      return { user: { ...state.user, hoveredRoute: route } };
-    }),
-  unsetHoveredRoute: (route) =>
+    });
+  },
+  setHoveredRoute: (route) => {
+    console.log("setHoveredRoute", route);
+    set((state) => ({
+      user: {
+        ...state.user,
+        hoveredRoute:
+          state.user.hoveredRoute?.pathname === route.pathname ? state.user.hoveredRoute : route,
+      },
+    }));
+  },
+  unsetHoveredRoute: (route) => {
+    console.log("unsetHoveredRoute", route);
     set((state) => ({
       user: {
         ...state.user,
         hoveredRoute:
           state.user.hoveredRoute?.pathname === route.pathname ? null : state.user.hoveredRoute,
       },
-    })),
+    }));
+  },
 }));
+
+export const useLinks = () => {
+  return useSiteStore((state) => ({
+    selectionLinks: state.user.selectedRoute?.links?.map((link) => ({
+      slug: link,
+      // sublinks: getNode("/" + link.join("/")).value.links,
+    })),
+    hoverLinks: state.user.hoveredRoute?.links?.map((link) => ({
+      slug: link,
+      // sublinks: getNode("/" + link.join("/")).value.links,
+    })),
+  }));
+};
 
 export const InitializeStore = ({
   selectedRoute,

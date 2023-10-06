@@ -1,4 +1,4 @@
-import type { Route } from "@/model/schema/route";
+import type { Route, Slug } from "@/model/schema/route";
 import fs from "fs";
 
 import matter from "gray-matter";
@@ -47,12 +47,14 @@ async function getRoute(
   const filepath = path.join(PARENT_FOLDER, ...dirslug, file);
   const fileContent = fs.readFileSync(filepath, "utf8");
 
-  const relativeSlugs = fileContent.match(/\]\((?!http)(.*?)\)/g)?.map((link) => {
+  const links: Slug[] = [];
+  fileContent.match(/\]\((?!http)(.*?)\)/g)?.forEach((link) => {
     const url = link.replace(/\]\(/g, "").replace(/\)/g, "");
     const slug = url.split("/").filter((s) => s !== "");
 
-    return slug;
+    links.push(slug);
   });
+
   const parsed = matter(fileContent);
   const metadata = parsed.data;
 
@@ -61,13 +63,20 @@ async function getRoute(
 
   metadata.type = metadata.type || cascadeType;
 
+  if (metadata.links) {
+    metadata.links.forEach((link: string) => {
+      const slug = link.split("/").filter((s) => s !== "");
+      links.push(slug);
+    });
+  }
+
   return {
     route: {
       isIndex,
       pathname: `/${slug.join("/")}`,
       slug,
       metadata,
-      links: relativeSlugs || [],
+      links,
     },
     cascadeType: isIndex && metadata.cascadeType ? metadata.cascadeType : cascadeType,
   };
@@ -96,7 +105,17 @@ const getArticlesTs = (routes: Route[]) => {
 };
 
 getRoutes().then((routes: Route[]) => {
-  // save to src/content/routes.json
+  //balance links
+  routes.forEach((route) => {
+    route.links.forEach((link) => {
+      const linkRoute = routes.find((r) => r.pathname === `/${link.join("/")}`);
+      if (linkRoute) {
+        if (!linkRoute.links) linkRoute.links = [];
+        if (!linkRoute.links.find((l) => l.join("/") === route.slug.join("/")))
+          linkRoute.links.push(route.slug);
+      }
+    });
+  });
   fs.writeFileSync("src/lib/gen/routes.ts", `export const routes = ${JSON.stringify(routes)}`);
   fs.writeFileSync("src/lib/gen/articles.ts", getArticlesTs(routes));
 });

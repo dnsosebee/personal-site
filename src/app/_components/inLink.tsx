@@ -11,8 +11,13 @@ export const CustomLink = (
   // check whether absolute
   if (href.startsWith("http")) {
     return (
-      <Link href={href}>
-        <a {...props}>{children}</a>
+      <Link
+        href={href}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="inline text-blue-600 dark:text-blue-400 hover:underline"
+      >
+        {children}
       </Link>
     );
   }
@@ -53,7 +58,7 @@ export const InLink = ({ href, children }: { href: string; children: React.React
       onClick={onClick}
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}
-      className="inline text-blue-600 dark:text-blue-400 underline"
+      className="inline text-blue-600 dark:text-blue-400 hover:underline"
     >
       {children}
     </button>

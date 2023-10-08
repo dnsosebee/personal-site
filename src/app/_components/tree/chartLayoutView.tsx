@@ -17,7 +17,7 @@ export const ChartLayoutView = () => {
 
   return (
     <div
-      className="grow flex p-6 gap-6 max-w-[120rem]"
+      className="grow flex p-6 gap-6 max-w-[120rem] "
       // style={{
       //   display: "grid",
       //   gridTemplateColumns:
@@ -76,7 +76,7 @@ const Arrow = ({ one, two, hover = true }: { one: Slug; two: Slug; hover?: boole
   const start = one_col_idx < two_col_idx ? one : two;
   const end = one_col_idx < two_col_idx ? two : one;
   const xArrowProps = {
-    key: `${start}-${end}`,
+    key: crypto.getRandomValues(new Uint32Array(1))[0],
     start: pn(start),
     end: pn(end),
     startAnchor: "right" as const,

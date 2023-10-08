@@ -4,9 +4,34 @@ title: About Me
 type: article
 defaultChildType: article
 links:
-  - /projects/josh-bersin-company
 ---
 
-Hi, I'm Daniel - a freelance full-stack software engineer based in the SF Bay Area.
+import Image from "next/image";
+import { SocialIcon } from "react-social-icons";
+// import "react-social-icons/vimeo";
+// import "react-social-icons/meetup";
 
-I lead AI implementation projects like [the Josh Bersin Company Copilot](/projects/josh-bersin-company).
+{" "}
+
+<Image
+  src="/headshot.jpg"
+  width="200"
+  height="200"
+  alt="Daniel's headshot"
+  className="rounded-full self-center"
+/>
+
+Hi, I'm Daniel! I'm a freelance full-stack software engineer based in the SF Bay Area.
+
+I lead development of generative-AI products like [the Josh Bersin Company Copilot](/projects/josh-bersin-company) and interactive programming tools like [the Digital Abacus](/projects/digital-abacus).
+
+I like building web apps from scratch and working closely with my clients through the design process. I use NextJS, typescript and TailwindCSS for most projects.
+
+If you'd like to work together, please send me a DM:
+
+<div className="flex flex-row justify-center space-x-4">
+  <SocialIcon url="https://twitter.com/dnsosebee" />
+  <SocialIcon url="https://www.linkedin.com/in/danielsosebee/" />
+  <SocialIcon url="https://github.com/dnsosebee" />
+  {/* <SocialIcon url="https://humanprogramming.substack.com/" /> */}
+</div>

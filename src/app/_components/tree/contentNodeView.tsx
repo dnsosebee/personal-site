@@ -63,16 +63,16 @@ export const ContentNodeView = ({ node }: { node: ContentNode }) => {
 
   return (
     <div
-      className={`grow  flex flex-col  shadow-stone-400 ${
+      className={`grow  flex flex-col  shadow-stone-400 rounded ${
         selected
-          ? " bg-blue-300 dark:bg-blue-700"
+          ? " bg-blue-300 dark:bg-blue-700 ring-2 ring-blue-600 dark:ring-blue-400 rounded"
           : selectionLink
-          ? " bg-indigo-200 dark:bg-violet-800"
+          ? " bg-indigo-100 dark:bg-violet-900"
           : hovered
-          ? " bg-stone-400 dark:bg-stone-600"
+          ? " bg-stone-300 dark:bg-stone-700"
           : hoverLink
-          ? "bg-stone-300 dark:bg-stone-700"
-          : "bg-stone-200 dark:bg-stone-800"
+          ? "bg-stone-200 dark:bg-stone-800"
+          : "" //"bg-stone-200 dark:bg-stone-800"
       }`}
       onMouseOver={onMouseEnter}
       onMouseOut={onMouseLeave}
@@ -87,10 +87,10 @@ export const ContentNodeView = ({ node }: { node: ContentNode }) => {
         {node.value.metadata.title}
         {type === "link" ? <ArrowTopRightOnSquareIcon className="w-6 h-6  pl-2 inline" /> : ""}
       </Link>
-      <div className="pl-4 flex flex-col gap-2">
-        {/* <AnimateChangeInHeight> */}
-        {selected && type === "article" && <Article route={node.value} />}
-        {/* </AnimateChangeInHeight> */}
+      {/* <AnimateChangeInHeight> */}
+      {selected && type === "article" && <Article route={node.value} />}
+      {/* </AnimateChangeInHeight> */}
+      <div className="pl-5 flex flex-col gap-2">
         {node.children.length > 0 && (
           <div
             className=""

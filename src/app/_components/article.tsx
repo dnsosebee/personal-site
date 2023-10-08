@@ -12,8 +12,8 @@ export const Article = ({ route }: { route: Route }) => {
   // const url = route.isIndex ? pathnameWithoutTrailingSlash + "/index.mdx" : route.pathname + ".mdx";
   const Component = articles[route.pathname];
   return (
-    <main className="p-2  bg-stone-100 dark:bg-stone-900">
-      <article className={`${inter.className} prose dark:prose-invert max-w-none`}>
+    <main className="px-2 py-4 bg-stone-100 dark:bg-stone-900 rounded">
+      <article className={`${inter.className} prose dark:prose-invert max-w-none flex flex-col`}>
         {/* <h1>{route.metadata.title}</h1> */}
         {/* <React.Suspense fallback={<div>Loading...</div>}> */}
         <Component />

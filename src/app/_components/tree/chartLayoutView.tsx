@@ -17,7 +17,7 @@ export const ChartLayoutView = () => {
 
   return (
     <div
-      className="grow flex p-6 gap-6 max-w-[120rem] "
+      className="grow flex flex-col md:flex-row p-6 gap-6 max-w-[120rem] "
       // style={{
       //   display: "grid",
       //   gridTemplateColumns:
@@ -84,5 +84,5 @@ const Arrow = ({ one, two, hover = true }: { one: Slug; two: Slug; hover?: boole
     color,
     strokeWidth: 2,
   };
-  return <XArrow {...xArrowProps} />;
+  return <XArrow {...xArrowProps} passProps={{ className: "invisible md:visible" }} />;
 };

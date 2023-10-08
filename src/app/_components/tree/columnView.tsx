@@ -5,7 +5,7 @@ import { ContentNodeView } from "./contentNodeView";
 export const ColumnView = ({ column }: { column: Column }) => {
   return (
     <div
-      className=" w-1/3 grow space-y-2"
+      className="md:w-1/3 grow space-y-2"
       // style={{
       //   display: "grid",
       //   gridTemplateRows:
